@@ -100,7 +100,7 @@ export default function Navbar() {
       {isExternalUrl(item.href) ? (
         <div
           onClick={() => handleClick(item.href)}
-          className={`custom-font font-bold text-purple-500 hover:text-blue-600 transition-colors duration-200 cursor-pointer ${
+          className={`custom-font font-bold text-blue-500 hover:text-blue-600 transition-colors duration-200 cursor-pointer ${
             isMobile ? 'block py-3 px-4 text-lg' : ''
           }`}
         >
@@ -110,7 +110,7 @@ export default function Navbar() {
         <>
           <Link
             href={item.href}
-            className={`custom-font font-bold text-purple-500 hover:text-blue-600 transition-colors duration-200 ${
+            className={`custom-font font-bold text-blue-500 hover:text-blue-600 transition-colors duration-200 ${
               isMobile ? 'block py-3 px-4 text-lg' : ''
             }`}
           >
@@ -265,21 +265,21 @@ export default function Navbar() {
                     {isExternalUrl(item.href) ? (
                       <div
                         onClick={() => handleClick(item.href)}
-                        className="custom-font font-bold text-purple-500 hover:text-blue-600 transition-colors duration-200 cursor-pointer whitespace-nowrap"
+                        className="custom-font font-bold text-blue-500 hover:text-blue-600 transition-colors duration-200 cursor-pointer whitespace-nowrap"
                       >
                         {item.text}
                       </div>
                     ) : (
                       <Link
                         href={item.href}
-                        className="custom-font font-bold text-purple-500 hover:text-blue-600 transition-colors duration-200 whitespace-nowrap"
+                        className="custom-font font-bold text-blue-500 hover:text-blue-600 transition-colors duration-200 whitespace-nowrap"
                       >
                         {item.text}
                       </Link>
                     )}
                     {isAdmin && pathname.startsWith('/admin') && (
                       <button
-                        className="absolute -top-2 -right-2 text-xs text-gray-400 hover:text-purple-500 bg-white rounded-full w-5 h-5 flex items-center justify-center shadow-sm border"
+                        className="absolute -top-2 -right-2 text-xs text-gray-400 hover:text-blue-500 bg-white rounded-full w-5 h-5 flex items-center justify-center shadow-sm border"
                         onClick={() => openEdit(item)}
                       >
                         ✎
@@ -344,7 +344,7 @@ export default function Navbar() {
                   type="text"
                   value={form.text}
                   onChange={e => setForm({ ...form, text: e.target.value })}
-                  className="border border-gray-300 rounded-lg px-3 md:px-4 py-2 md:py-3 w-full focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-sm md:text-base"
+                  className="border border-gray-300 rounded-lg px-3 md:px-4 py-2 md:py-3 w-full focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm md:text-base"
                   required
                 />
               </div>
@@ -355,7 +355,7 @@ export default function Navbar() {
                   type="text"
                   value={form.href}
                   onChange={e => setForm({ ...form, href: e.target.value })}
-                  className="border border-gray-300 rounded-lg px-3 md:px-4 py-2 md:py-3 w-full focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-sm md:text-base"
+                  className="border border-gray-300 rounded-lg px-3 md:px-4 py-2 md:py-3 w-full focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm md:text-base"
                   required
                 />
               </div>
@@ -366,7 +366,7 @@ export default function Navbar() {
                   type="number"
                   value={form.order}
                   onChange={e => setForm({ ...form, order: Number(e.target.value) })}
-                  className="border border-gray-300 rounded-lg px-3 md:px-4 py-2 md:py-3 w-full focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all duration-200 text-sm md:text-base"
+                  className="border border-gray-300 rounded-lg px-3 md:px-4 py-2 md:py-3 w-full focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm md:text-base"
                   required
                   min={0}
                 />
@@ -382,7 +382,7 @@ export default function Navbar() {
                 </button>
                 <button
                   type="submit"
-                  className="px-4 md:px-6 py-2 md:py-3 bg-purple-500 text-white rounded-lg hover:bg-purple-600 transition-colors duration-200 font-medium text-sm md:text-base"
+                  className="px-4 md:px-6 py-2 md:py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors duration-200 font-medium text-sm md:text-base"
                 >
                   Save Changes
                 </button>

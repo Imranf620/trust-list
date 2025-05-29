@@ -12,7 +12,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Trust List",
+  title: "Reliance Cashout",
   description: "Buy Trusted Data from Verified Sources",
 };
 
