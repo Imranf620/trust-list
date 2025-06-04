@@ -385,8 +385,8 @@ const Service = () => {
       </div>
 
       {/* Selected Card or All Display */}
-      {(selectedCard || showAll) && (
-        <div className="my-5 md:my-20 flex justify-center items-center">
+      {(selectedCard && !showAll) && (
+        <div className="my-5  flex justify-center items-center">
           <button
             style={{
               backgroundColor: "white",
@@ -421,11 +421,19 @@ const Service = () => {
             data.cards?.map((card, cardIndex) => (
               <div key={cardIndex} className="mb-8">
                 {/* Category Header */}
-                <div className="mb-4">
-                  <h3 className="text-lg font-bold text-[#0066cc] border-b-2 border-[#0066cc] pb-2">
-                    {card.text}
-                  </h3>
-                </div>
+            
+                <div className=" flex justify-center pb-4 pt-6 items-center">
+          <button
+            style={{
+              backgroundColor: "white",
+              color: "black",
+              border: "2px solid black",
+            }}
+            className="relative px-2 py-1 md:px-4 md:py-2 rounded-[4px] font-semibold transition-colors hover:bg-blue-600"
+          >
+            {card.text}
+          </button>
+        </div>
                 
                 {/* Category Details */}
                 <div className="space-y-4">
