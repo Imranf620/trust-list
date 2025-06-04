@@ -9,6 +9,7 @@ const Service = () => {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [selectedCard, setSelectedCard] = useState(null);
+  const [showAll, setShowAll] = useState(true); // New state for "All" button
   const [editMode, setEditMode] = useState(null); // 'service', 'card', 'detail', 'newService'
   const [editForm, setEditForm] = useState({});
 
@@ -21,10 +22,10 @@ const Service = () => {
   }, []);
 
   useEffect(() => {
-    if (data?.cards?.length > 0 && !selectedCard) {
+    if (data?.cards?.length > 0 && !selectedCard && !showAll) {
       setSelectedCard(data.cards[0]);
     }
-  }, [data, selectedCard]);
+  }, [data, selectedCard, showAll]);
 
   async function fetchService() {
     setLoading(true);
@@ -250,6 +251,18 @@ const Service = () => {
     setEditForm({});
   }
 
+  // New function to handle "All" button click
+  function handleAllClick() {
+    setShowAll(true);
+    setSelectedCard(null);
+  }
+
+  // New function to handle individual card selection
+  function handleCardClick(card) {
+    setShowAll(false);
+    setSelectedCard(card);
+  }
+
   if (loading) {
     return <Loader />;
   }
@@ -295,11 +308,10 @@ const Service = () => {
         )}
 
         <a href={normalizeExternalUrl(data.imageLink)}>
-        <button className="px-6 py-3 h-full bg-[#0066cc] text-white font-extrabold rounded-lg shadow-[0_4px_0_#004a99] hover:translate-y-[2px] hover:shadow-[0_2px_0_#004a99] transition-transform duration-150 text-center leading-tight">
-  <span className="block text-2xl drop-shadow-[2px_2px_0_#004a99]">Latest</span>
-  <span className="block text-2xl drop-shadow-[2px_2px_0_#004a99]">News</span>
-</button>
-
+          <button className="px-6 py-3 h-full bg-[#0066cc] text-white font-extrabold rounded-lg shadow-[0_4px_0_#004a99] hover:translate-y-[2px] hover:shadow-[0_2px_0_#004a99] transition-transform duration-150 text-center leading-tight">
+            <span className="block text-2xl drop-shadow-[2px_2px_0_#004a99]">Latest</span>
+            <span className="block text-2xl drop-shadow-[2px_2px_0_#004a99]">News</span>
+          </button>
         </a>
 
         <a
@@ -310,7 +322,7 @@ const Service = () => {
         </a>
       </div>
 
-      {/* Cards Section */}
+      {/* Cards Section with All Button */}
       <div className="flex items-center flex-wrap gap-2 md:gap-6 relative">
         {isAdmin && pathname.startsWith("/admin") && (
           <button
@@ -322,12 +334,25 @@ const Service = () => {
           </button>
         )}
 
+        {/* All Button */}
+        <button
+          onClick={handleAllClick}
+          style={{
+            backgroundColor: showAll ? "white" : "rgb(0, 102, 204)",
+            color: showAll ? "rgb(0, 102, 204)" : "white",
+            border: "2px solid rgb(0, 102, 204)",
+          }}
+          className="px-2 py-1 md:px-4 md:py-2 rounded-[4px] font-semibold transition-colors hover:bg-blue-500"
+        >
+          All
+        </button>
+
         {data.cards?.map((card, i) => {
-          const isSelected = selectedCard?.text === card.text;
+          const isSelected = !showAll && selectedCard?.text === card.text;
           return (
             <div key={i} className="relative">
               <button
-                onClick={() => setSelectedCard(card)}
+                onClick={() => handleCardClick(card)}
                 style={{
                   backgroundColor: isSelected ? "white" : "rgb(0, 102, 204)",
                   color: isSelected ? "rgb(0, 102, 204)" : "white",
@@ -359,8 +384,8 @@ const Service = () => {
         })}
       </div>
 
-      {/* Selected Card Display */}
-      {selectedCard && (
+      {/* Selected Card or All Display */}
+      {(selectedCard || showAll) && (
         <div className="my-5 md:my-20 flex justify-center items-center">
           <button
             style={{
@@ -370,15 +395,15 @@ const Service = () => {
             }}
             className="relative px-2 py-1 md:px-4 md:py-2 rounded-[4px] font-semibold transition-colors hover:bg-blue-600"
           >
-            {selectedCard.text}
+            {showAll ? "All Categories" : selectedCard.text}
           </button>
         </div>
       )}
 
-      {/* Details Section */}
-      {selectedCard && (
+      {/* Details Section - Show All or Selected Card Details */}
+      {(selectedCard || showAll) && (
         <div className="mb-20 space-y-4 relative">
-          {isAdmin && pathname.startsWith("/admin") && (
+          {isAdmin && pathname.startsWith("/admin") && !showAll && (
             <button
               onClick={() =>
                 addNewDetail(
@@ -391,65 +416,129 @@ const Service = () => {
             </button>
           )}
 
-          {selectedCard.detail?.map((detail, i) => (
-            <div key={i} className="relative">
-              <div className="flex flex-col w-full gap-[25px] sm:flex-row justify-between items-center p-2 border border-[#0066cc] rounded-[6px] bg-white shadow-[0_2px_5px_#0066cc] hover:shadow-[0_4px_7px_#0066cc]">
-                <span className="text-sm sm:text-base font-medium text-black text-center sm:text-left">
-                  <span className="text-xl font-bold">{detail.heading}</span> -{" "}
-                  {detail.para}
-                </span>
-                <a
-                  href={normalizeExternalUrl(detail.link)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-2 sm:mt-0"
-                >
-                  <button className="flex items-center gap-2 min-w-[30px] px-2 py-1 border text-blue-500 border-blue-500 rounded-[4px] font-semibold text-sm drop-shadow-[0_0_4px_rgba(255,0,150,0.7)] transition hover:bg-blue-500 hover:text-white">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="currentColor"
-                      viewBox="0 0 24 24"
-                      className="w-8 h-8"
-                    >
-                      <path d="M9.036 12.33l-.61 3.446c.873 0 1.253-.375 1.735-.823l2.348 1.73c.43.237.732.114.847-.398l1.537-7.26c.157-.693-.265-.967-.7-.798L6.81 11.09c-.687.267-.68.64.118.865l2.108.64 4.89-3.07-3.032 3.787-.858-.226z"></path>
-                    </svg>
-                    LINK
-                  </button>
-                </a>
-              </div>
-
-              {isAdmin && pathname.startsWith("/admin") && (
-                <div className="absolute -top-2 -right-2 flex gap-1">
-                  <button
-                    onClick={() =>
-                      openDetailEdit(
-                        data.cards.findIndex(
-                          (c) => c.text === selectedCard.text
-                        ),
-                        i
-                      )
-                    }
-                    className="text-xs text-gray-400 hover:text-blue-500 bg-white rounded-full w-5 h-5 flex items-center justify-center shadow-sm border"
-                  >
-                    ✎
-                  </button>
-                  <button
-                    onClick={() =>
-                      deleteDetail(
-                        data.cards.findIndex(
-                          (c) => c.text === selectedCard.text
-                        ),
-                        i
-                      )
-                    }
-                    className="text-xs text-gray-400 hover:text-red-500 bg-white rounded-full w-5 h-5 flex items-center justify-center shadow-sm border"
-                  >
-                    ×
-                  </button>
+          {showAll ? (
+            // Show all details from all cards when "All" is selected
+            data.cards?.map((card, cardIndex) => (
+              <div key={cardIndex} className="mb-8">
+                {/* Category Header */}
+                <div className="mb-4">
+                  <h3 className="text-lg font-bold text-[#0066cc] border-b-2 border-[#0066cc] pb-2">
+                    {card.text}
+                  </h3>
                 </div>
-              )}
-            </div>
-          ))}
+                
+                {/* Category Details */}
+                <div className="space-y-4">
+                  {card.detail?.map((detail, detailIndex) => (
+                    <div key={detailIndex} className="relative">
+                      <div className="flex flex-col w-full gap-[25px] sm:flex-row justify-between items-center p-2 border border-[#0066cc] rounded-[6px] bg-white shadow-[0_2px_5px_#0066cc] hover:shadow-[0_4px_7px_#0066cc]">
+                        <span className="text-sm sm:text-base font-medium text-black text-center sm:text-left">
+                          <span className="text-xl font-bold">{detail.heading}</span> -{" "}
+                          {detail.para}
+                        </span>
+                        <a
+                          href={normalizeExternalUrl(detail.link)}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-2 sm:mt-0"
+                        >
+                          <button className="flex items-center gap-2 min-w-[30px] px-2 py-1 border text-blue-500 border-blue-500 rounded-[4px] font-semibold text-sm drop-shadow-[0_0_4px_rgba(255,0,150,0.7)] transition hover:bg-blue-500 hover:text-white">
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="currentColor"
+                              viewBox="0 0 24 24"
+                              className="w-8 h-8"
+                            >
+                              <path d="M9.036 12.33l-.61 3.446c.873 0 1.253-.375 1.735-.823l2.348 1.73c.43.237.732.114.847-.398l1.537-7.26c.157-.693-.265-.967-.7-.798L6.81 11.09c-.687.267-.68.64.118.865l2.108.64 4.89-3.07-3.032 3.787-.858-.226z"></path>
+                            </svg>
+                            LINK
+                          </button>
+                        </a>
+                      </div>
+
+                      {isAdmin && pathname.startsWith("/admin") && (
+                        <div className="absolute -top-2 -right-2 flex gap-1">
+                          <button
+                            onClick={() => openDetailEdit(cardIndex, detailIndex)}
+                            className="text-xs text-gray-400 hover:text-blue-500 bg-white rounded-full w-5 h-5 flex items-center justify-center shadow-sm border"
+                          >
+                            ✎
+                          </button>
+                          <button
+                            onClick={() => deleteDetail(cardIndex, detailIndex)}
+                            className="text-xs text-gray-400 hover:text-red-500 bg-white rounded-full w-5 h-5 flex items-center justify-center shadow-sm border"
+                          >
+                            ×
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))
+          ) : (
+            // Show selected card details
+            selectedCard.detail?.map((detail, i) => (
+              <div key={i} className="relative">
+                <div className="flex flex-col w-full gap-[25px] sm:flex-row justify-between items-center p-2 border border-[#0066cc] rounded-[6px] bg-white shadow-[0_2px_5px_#0066cc] hover:shadow-[0_4px_7px_#0066cc]">
+                  <span className="text-sm sm:text-base font-medium text-black text-center sm:text-left">
+                    <span className="text-xl font-bold">{detail.heading}</span> -{" "}
+                    {detail.para}
+                  </span>
+                  <a
+                    href={normalizeExternalUrl(detail.link)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-2 sm:mt-0"
+                  >
+                    <button className="flex items-center gap-2 min-w-[30px] px-2 py-1 border text-blue-500 border-blue-500 rounded-[4px] font-semibold text-sm drop-shadow-[0_0_4px_rgba(255,0,150,0.7)] transition hover:bg-blue-500 hover:text-white">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="currentColor"
+                        viewBox="0 0 24 24"
+                        className="w-8 h-8"
+                      >
+                        <path d="M9.036 12.33l-.61 3.446c.873 0 1.253-.375 1.735-.823l2.348 1.73c.43.237.732.114.847-.398l1.537-7.26c.157-.693-.265-.967-.7-.798L6.81 11.09c-.687.267-.68.64.118.865l2.108.64 4.89-3.07-3.032 3.787-.858-.226z"></path>
+                      </svg>
+                      LINK
+                    </button>
+                  </a>
+                </div>
+
+                {isAdmin && pathname.startsWith("/admin") && (
+                  <div className="absolute -top-2 -right-2 flex gap-1">
+                    <button
+                      onClick={() =>
+                        openDetailEdit(
+                          data.cards.findIndex(
+                            (c) => c.text === selectedCard.text
+                          ),
+                          i
+                        )
+                      }
+                      className="text-xs text-gray-400 hover:text-blue-500 bg-white rounded-full w-5 h-5 flex items-center justify-center shadow-sm border"
+                    >
+                      ✎
+                    </button>
+                    <button
+                      onClick={() =>
+                        deleteDetail(
+                          data.cards.findIndex(
+                            (c) => c.text === selectedCard.text
+                          ),
+                          i
+                        )
+                      }
+                      className="text-xs text-gray-400 hover:text-red-500 bg-white rounded-full w-5 h-5 flex items-center justify-center shadow-sm border"
+                    >
+                      ×
+                    </button>
+                  </div>
+                )}
+              </div>
+            ))
+          )}
         </div>
       )}
 

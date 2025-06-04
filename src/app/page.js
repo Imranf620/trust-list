@@ -8,7 +8,7 @@ const RelianceCashoutLogo = ({ width = "100%", height = "100%", className = "" }
     <svg 
       width={width} 
       height={height} 
-      viewBox="0 0 800 200" 
+      viewBox="0 0 800 150" 
       xmlns="http://www.w3.org/2000/svg"
       className={className}
       preserveAspectRatio="xMidYMid meet"
@@ -31,17 +31,6 @@ const RelianceCashoutLogo = ({ width = "100%", height = "100%", className = "" }
         letterSpacing="4px"
       >
         RELIANCE
-      </text>
-      <text 
-        x="50" 
-        y="170" 
-        fontFamily="Arial Black, sans-serif" 
-        fontSize="50" 
-        fontWeight="900" 
-        fill="url(#blueGradient)" 
-        letterSpacing="10px"
-      >
-        CASHOUT
       </text>
     </svg>
   );
